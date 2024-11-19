@@ -43,8 +43,8 @@ from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils import check_min_version, send_example_telemetry
 from transformers.utils.versions import require_version
 
-from src.datasets.fs_load import load_fs_dataset
-from src.transformers.fs_trainer import FSTrainer
+from fsdetection.datasets.fs_load import load_fs_dataset
+from fsdetection.transformers.fs_trainer import FSTrainer
 
 logger = logging.getLogger(__name__)
 
