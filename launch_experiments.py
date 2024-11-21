@@ -2,6 +2,7 @@ import argparse
 import json
 import subprocess
 
+
 def get_args_parser():
     parser = argparse.ArgumentParser('Launch experients')
 
@@ -17,6 +18,7 @@ def get_args_parser():
     parser.add_argument('--exec_type', type=str, default="slurm")
 
     return parser
+
 
 def build_cmd(config):
     cmd = ""
@@ -48,7 +50,6 @@ def main(args):
 
                 cmd = build_cmd(config)
                 submit_job(cmd, exec_type=args.exec_type)
-
 
 
 if __name__ == "__main__":
