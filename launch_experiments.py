@@ -1,8 +1,6 @@
 import argparse
 import json
 import subprocess
-from email.policy import default
-
 
 def get_args_parser():
     parser = argparse.ArgumentParser('Launch experients')
@@ -13,10 +11,12 @@ def get_args_parser():
     parser.add_argument('--shots', nargs='+', default=["10"])
     parser.add_argument('--output_dir', type=str, default="detr-finetuned")
 
+    parser.add_argument('--unfreeze_modules', type=str)
+    parser.add_argument('--freeze_at', type=str)
+
     parser.add_argument('--exec_type', type=str, default="slurm")
 
     return parser
-
 
 def build_cmd(config):
     cmd = ""
@@ -39,14 +39,16 @@ def main(args):
     for dataset_name in args.dataset_names:
         for seed in args.seed:
             for shots in args.shots:
-                output_dir = f"{args.output_dir}/{dataset_name}/{seed}/{shots}"
+                output_dir = f"{args.output_dir}/{dataset_name.split('/')[-1]}/{seed}/{shots}"
+
                 config["dataset_name"] = dataset_name
                 config["seed"] = seed
                 config["shots"] = shots
                 config["output_dir"] = output_dir
 
                 cmd = build_cmd(config)
-                submit_job(cmd, args.exec_type)
+                submit_job(cmd, exec_type=args.exec_type)
+
 
 
 if __name__ == "__main__":
