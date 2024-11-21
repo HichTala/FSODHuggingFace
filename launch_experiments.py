@@ -11,6 +11,9 @@ def get_args_parser():
     parser.add_argument('--shots', nargs='+', default=["10"])
     parser.add_argument('--output_dir', type=str, default="detr-finetuned")
 
+    parser.add_argument('--unfreeze_modules', type=str)
+    parser.add_argument('--freeze_at', type=str)
+
     parser.add_argument('--exec_type', type=str, default="slurm")
 
     return parser
@@ -25,6 +28,11 @@ def build_cmd(config):
 def main(args):
     with open(args.config) as f:
         config = json.load(f)
+
+    if args.unfreeze_modules:
+        config["unfreeze_modules"] = args.unfreeze_modules
+    if args.freeze_at:
+        config["freeze_at"] = args.freeze_at
 
     for dataset_name in args.dataset_names:
         for seed in args.seed:
