@@ -15,60 +15,48 @@
 """COCO"""
 import json
 import os
-from pathlib import Path
 
 import datasets
-
-_SPLIT_MAP = {"train": "train2017", "validation": "val2017"}
-
-_CATEGORY_NAMES = [
-    "plane", "ship", "storage-tank", "baseball-diamond", "tennis-court", "basketball-court", "ground-track-field",
-    "harbor", "bridge", "small-vehicle", "large-vehicle", "roundabout", "swimming-pool", "helicopter",
-    "soccer-ball-field", "container-crane"
-]
-
-_FEATURES = datasets.Features(
-    {
-        "image_id": datasets.Value("int64"),
-        "image": datasets.Image(),
-        "width": datasets.Value("int64"),
-        "height": datasets.Value("int64"),
-        "objects": datasets.Sequence({
-            "bbox_id": datasets.Value("int64"),
-            "category": datasets.ClassLabel(names=_CATEGORY_NAMES),
-            "bbox": datasets.Sequence(datasets.Value("int64"), 4),
-            "area": datasets.Value("int64"),
-        })
-    }
-)
 
 
 class COCO(datasets.GeneratorBasedBuilder):
     """COCO"""
 
-    VERSION = datasets.Version("3.0.0")
+    VERSION = None
 
-    BUILDER_CONFIGS = [
-        datasets.BuilderConfig(
-            name="dota", version=VERSION, description=""
-        ),
-    ]
+    BUILDER_CONFIGS = []
 
-    DEFAULT_CONFIG_NAME = "dota"
+    DEFAULT_CONFIG_NAME = ""
+
+    def __init__(self, name, annotations_path, image_path, features, version=datasets.Version("1.0.0")):
+        self.VERSION = version
+
+        self.BUILDER_CONFIGS.append(datasets.BuilderConfig(
+            name=name, version=self.VERSION, description=""
+        ))
+
+        self.DEFAULT_CONFIG_NAME = name
+
+        super().__init__()
+
+        self.annotations_path = annotations_path
+        self.image_path = image_path
+
+        self.features = datasets.Features(features)
 
     def _info(self):
         return datasets.DatasetInfo(
-            features=_FEATURES,
+            features=self.features,
         )
 
     def _split_generators(self, dl_manager):
         annotation_file = {
-            "train": os.path.join("/home/hicham/Documents/datasets/dota/annotations", "instances_train2017.json"),
-            "validation": os.path.join("/home/hicham/Documents/datasets/dota/annotations", "instances_val2017.json"),
-            "test": os.path.join("/home/hicham/Documents/datasets/dota/annotations", "instances_test2017.json")}
-        image_folders = {"train": Path("/home/hicham/Documents/datasets/dota/train2017"),
-                         "validation": Path("/home/hicham/Documents/datasets/dota/val2017"),
-                         "test": Path("/home/hicham/Documents/datasets/dota/test2017")}
+            "train": os.path.join(self.annotations_path, "instances_train2017.json"),
+            "validation": os.path.join(self.annotations_path, "instances_val2017.json"),
+            "test": os.path.join(self.annotations_path, "instances_test2017.json")}
+        image_folders = {"train": os.path.join(self.image_path, "train2017"),
+                         "validation": os.path.join(self.image_path, "val2017"),
+                         "test": os.path.join(self.image_path, "test2017")}
 
         return [
             datasets.SplitGenerator(
