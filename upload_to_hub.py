@@ -1,4 +1,4 @@
-from dataset_transformations.coco import COCO
+from dataset_transformations.coco_format import COCO
 from datasets import load_dataset
 
 builder = COCO()
