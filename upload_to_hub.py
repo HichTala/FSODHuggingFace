@@ -1,7 +1,7 @@
 import argparse
 import importlib
 
-from dataset_transformations.coco_format import COCO
+from dataset.coco_format import COCO
 
 
 def main(args):
