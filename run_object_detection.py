@@ -190,7 +190,7 @@ def compute_metrics(
     # Collect targets in the required format for metric computation
     for batch in targets:
         # collect image sizes, we will need them for predictions post processing
-        batch_image_sizes = torch.tensor([x["orig_size"] for x in batch])
+        batch_image_sizes = torch.tensor(np.array([x["orig_size"] for x in batch]))
         image_sizes.append(batch_image_sizes)
         # collect targets in the required format for metric computation
         # boxes were converted to YOLO format needed for model training
