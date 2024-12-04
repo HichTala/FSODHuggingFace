@@ -1,10 +1,6 @@
 import datasets
 
-CATEGORY_NAMES = [
-    "plane", "ship", "storage-tank", "baseball-diamond", "tennis-court", "basketball-court", "ground-track-field",
-    "harbor", "bridge", "small-vehicle", "large-vehicle", "roundabout", "swimming-pool", "helicopter",
-    "soccer-ball-field", "container-crane"
-]
+CATEGORY_NAMES = []
 
 FEATURES = datasets.Features(
     {
@@ -21,5 +17,5 @@ FEATURES = datasets.Features(
     }
 )
 
-ANNOTATIONS_PATH = "/home/hicham/Documents/datasets/dota/annotations"
-IMAGES_PATH = "/home/hicham/Documents/datasets/dota/"
+ANNOTATIONS_PATH = ""
+IMAGES_PATH = ""

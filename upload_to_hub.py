@@ -1,13 +1,20 @@
-from dataset_transformations.coco_format import COCO
-from datasets import load_dataset
-from configs.dataset import dota
+import argparse
+import importlib
 
-def main():
-    builder = COCO('dota', dota.ANNOTATIONS_PATH, dota.IMAGES_PATH, dota.FEATURES)
+from dataset_transformations.coco_format import COCO
+
+
+def main(args):
+    dataset = importlib.import_module(f"configs.dataset.{args.dataset}")
+    builder = COCO(args.dataset, dataset.ANNOTATIONS_PATH, dataset.IMAGES_PATH, dataset.FEATURES)
     builder.download_and_prepare()
 
     dataset = builder.as_dataset()
-    dataset.push_to_hub("HichTala/dota")
+    dataset.push_to_hub(f"HichTala/{args.dataset}")
+
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser('Upload Dataset to Hub')
+    parser.add_argument('dataset', type=str)
+
+    main(parser.parse_args())
