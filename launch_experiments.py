@@ -31,7 +31,7 @@ def build_cmd(config):
 def submit_job(cmd, exec_type):
     if exec_type == "python":
         cmd = f"python run_object_detection.py{cmd}"
-    subprocess.run(cmd, shell=True)
+    return subprocess.run(cmd, shell=True)
 
 
 def main(args):
@@ -47,7 +47,7 @@ def main(args):
         for seed in args.seed:
             for shot in args.shots:
                 for freeze_modules, freeze_at in zip(args.freeze_modules, args.freeze_at):
-                    output_dir = f"runs/{args.output_dir}/{dataset_name.split('/')[-1]}/{seed}/{shot}/"
+                    output_dir = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{seed}/{shot}/"
 
                     if len(freeze_modules) == 0:
                         output_dir += "full_finetuning"
@@ -65,7 +65,10 @@ def main(args):
                     config["output_dir"] = output_dir
 
                     cmd = build_cmd(config)
-                    submit_job(cmd, exec_type=args.exec_type)
+                    result = submit_job(cmd, exec_type=args.exec_type)
+                    if result.returncode != 0:
+                        print(f"Error running command: python run_object_detection.py{cmd}")
+                        return
 
 
 if __name__ == "__main__":
