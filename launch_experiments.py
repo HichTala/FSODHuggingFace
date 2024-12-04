@@ -48,7 +48,7 @@ def main(args):
         for seed in args.seed:
             for shot in args.shots:
                 for freeze_modules, freeze_at in zip(args.freeze_modules, args.freeze_at):
-                    output_dir = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{seed}/{shot}/"
+                    output_dir = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/seed_{seed}/"
 
                     if len(freeze_modules) == 0:
                         output_dir += "full_finetuning"
