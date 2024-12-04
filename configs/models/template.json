@@ -1,5 +1,5 @@
 {
-    "model_name_or_path": "facebook/detr-resnet-50",
+    "model_name_or_path": "",
     "do_train": true,
     "do_eval": true,
     "num_train_epochs": 100,

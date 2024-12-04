@@ -1,2 +1,3 @@
-configs/dataset/*
+configs/*
 !configs/dataset/template.py
+!configs/models/template.json

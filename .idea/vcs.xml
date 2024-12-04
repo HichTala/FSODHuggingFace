@@ -2,5 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/huggingface/detr-resnet-50" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/huggingface/dota" vcs="Git" />
   </component>
 </project>
