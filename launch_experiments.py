@@ -23,8 +23,9 @@ def get_args_parser():
 def build_cmd(config):
     cmd = ""
     for key, value in config.items():
-        cmd += f" --{key} "
-        cmd += str(value)
+        if key not in ['freeze_modules', 'freeze_at'] or not value:
+            cmd += f" --{key} "
+            cmd += str(value)
     return cmd
 
 
@@ -39,9 +40,9 @@ def main(args):
         config = json.load(f)
 
     if not args.freeze_modules:
-        args.freeze_modules = [[], ['backbone'], ['backbone'], ['bias'], ['norm']]
+        args.freeze_modules = ['', 'backbone', 'backbone', 'bias', 'norm']
     if not args.freeze_at:
-        args.freeze_at = [[], ['0'], ['half'], [], []]
+        args.freeze_at = ['', '0', 'half', '', '']
 
     for dataset_name in args.dataset_names:
         for seed in args.seed:
