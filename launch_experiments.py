@@ -10,7 +10,7 @@ def get_args_parser():
     parser.add_argument('--dataset_names', nargs='+', default=["detection-datasets/coco"])
     parser.add_argument('--seed', nargs='+', default=["1338"])
     parser.add_argument('--shots', nargs='+', default=["10"])
-    parser.add_argument('--output_dir', type=str, default="detr-finetuned")
+    parser.add_argument('--output_dir', type=str, default="detr-cross_domain")
 
     parser.add_argument('--freeze_modules', type=str)
     parser.add_argument('--freeze_at', type=str)
@@ -40,7 +40,7 @@ def main(args):
 
     if not args.freeze_modules:
         args.freeze_modules = [[], ['backbone'], ['backbone'], ['bias'], ['norm']]
-    if args.freeze_at:
+    if not args.freeze_at:
         args.freeze_at = [[], ['0'], ['half'], [], []]
 
     for dataset_name in args.dataset_names:
