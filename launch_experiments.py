@@ -23,7 +23,7 @@ def get_args_parser():
 def build_cmd(config):
     cmd = ""
     for key, value in config.items():
-        if key not in ['freeze_modules', 'freeze_at'] or not value:
+        if key not in ['freeze_modules', 'freeze_at'] or value != '':
             cmd += f" --{key} "
             cmd += str(value)
     return cmd
