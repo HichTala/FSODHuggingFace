@@ -50,12 +50,12 @@ def main(args):
                 for freeze_modules, freeze_at in zip(args.freeze_modules, args.freeze_at):
                     output_dir = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/seed_{seed}/"
 
-                    if len(freeze_modules) == 0:
+                    if freeze_modules == '':
                         output_dir += "full_finetuning"
-                    for freeze_module, freeze_at_single in zip(freeze_modules, freeze_at):
-                        if output_dir[-1] != '/':
-                            output_dir += '_'
-                        output_dir += f"{freeze_module}-{freeze_at_single}" if freeze_at_single != '0' else f"{freeze_module}-full"
+
+                    if output_dir[-1] != '/':
+                        output_dir += '_'
+                    output_dir += f"{freeze_modules}-{freeze_at}" if freeze_at != '' else f"{freeze_modules}-full"
 
                     config['freeze_modules'] = freeze_modules
                     config['freeze_at'] = freeze_at
