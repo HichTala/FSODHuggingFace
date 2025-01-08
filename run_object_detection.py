@@ -26,7 +26,6 @@ import albumentations as A
 import numpy as np
 import torch
 from datasets import load_dataset
-from fsdetection import FSTrainer
 from torchmetrics.detection.mean_ap import MeanAveragePrecision
 
 import transformers
@@ -536,7 +535,7 @@ def main():
         compute_metrics, image_processor=image_processor, id2label=id2label, threshold=0.0
     )
 
-    trainer = FSTrainer(
+    trainer = Trainer(
         model=model,
         args=training_args,
         fs_args=fs_args,
