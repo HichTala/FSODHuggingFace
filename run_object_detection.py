@@ -444,8 +444,6 @@ def main():
         dataset["train"] = split["train"]
         dataset["validation"] = split["test"]
 
-    dataset["train"].sampling(shots=fs_args.shots, seed=training_args.seed)
-
     # Get dataset categories and prepare mappings for label_name <-> label_id
     categories = dataset["train"].features["objects"].feature["category"].names
     id2label = dict(enumerate(categories))
