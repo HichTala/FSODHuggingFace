@@ -25,6 +25,8 @@ from typing import Any, List, Mapping, Optional, Tuple, Union
 import albumentations as A
 import numpy as np
 import torch
+from datasets import load_dataset
+from fsdetection import FSTrainer
 from torchmetrics.detection.mean_ap import MeanAveragePrecision
 
 import transformers
@@ -43,8 +45,6 @@ from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils import check_min_version, send_example_telemetry
 from transformers.utils.versions import require_version
 
-from fsdetection.datasets.fs_load import load_fs_dataset
-from fsdetection.transformers.fs_trainer import FSTrainer
 
 logger = logging.getLogger(__name__)
 
@@ -428,7 +428,7 @@ def main():
     # Load dataset, prepare splits
     # ------------------------------------------------------------------------------------------------
 
-    dataset = load_fs_dataset(
+    dataset = load_dataset(
         data_args.dataset_name, cache_dir=model_args.cache_dir, trust_remote_code=model_args.trust_remote_code
     )
 
