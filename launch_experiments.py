@@ -8,7 +8,7 @@ def get_args_parser():
 
     parser.add_argument('--config', type=str, default="configs/models/detr_resnet_50.json")
     parser.add_argument('--dataset_names', nargs='+', default=["detection-datasets/coco"])
-    parser.add_argument('--dataset_source', nargs='+', default="coco")
+    parser.add_argument('--dataset_source', default="coco")
     parser.add_argument('--seed', nargs='+', default=["1338"])
     parser.add_argument('--shots', nargs='+', default=["10"])
     parser.add_argument('--output_dir', type=str, default="detr-cross_domain")
