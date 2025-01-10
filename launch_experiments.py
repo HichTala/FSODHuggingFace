@@ -53,10 +53,9 @@ def main(args):
 
                     if len(freeze_modules) == 0:
                         output_dir += "full_finetuning"
-                    for freeze_module, freeze_at_single in zip(freeze_modules, freeze_at):
-                        if output_dir[-1] != '/':
-                            output_dir += '_'
-                        output_dir += f"{freeze_module}-{freeze_at_single}" if freeze_at_single != '0' else f"{freeze_module}-full"
+                    output_dir += f"{freeze_modules}-{freeze_at}" if freeze_at != '0' else f"{freeze_modules}-full"
+                    if output_dir[-1] == '-':
+                        output_dir = output_dir[:-1]
 
                     config['freeze_modules'] = freeze_modules
                     config['freeze_at'] = freeze_at
