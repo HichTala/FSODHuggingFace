@@ -49,7 +49,7 @@ from fsdetection.transformers.fs_trainer import FSTrainer
 logger = logging.getLogger(__name__)
 
 # Will error if the minimal version of Transformers is not installed. Remove at your own risks.
-check_min_version("4.47.0.dev0")
+check_min_version("4.49.0.dev0")
 
 require_version("datasets>=2.0.0", "To fix: pip install -r examples/pytorch/object-detection/requirements.txt")
 
@@ -190,7 +190,7 @@ def compute_metrics(
     # Collect targets in the required format for metric computation
     for batch in targets:
         # collect image sizes, we will need them for predictions post processing
-        batch_image_sizes = torch.tensor(np.array([x["orig_size"] for x in batch]))
+        batch_image_sizes = torch.tensor([x["orig_size"] for x in batch])
         image_sizes.append(batch_image_sizes)
         # collect targets in the required format for metric computation
         # boxes were converted to YOLO format needed for model training
