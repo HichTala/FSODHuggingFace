@@ -8,6 +8,7 @@ def get_args_parser():
 
     parser.add_argument('--config', type=str, default="configs/models/detr_resnet_50.json")
     parser.add_argument('--dataset_names', nargs='+', default=["detection-datasets/coco"])
+    parser.add_argument('--dataset_source', default="coco")
     parser.add_argument('--seed', nargs='+', default=["1338"])
     parser.add_argument('--shots', nargs='+', default=["10"])
     parser.add_argument('--output_dir', type=str, default="detr-cross_domain")
@@ -48,14 +49,13 @@ def main(args):
         for seed in args.seed:
             for shot in args.shots:
                 for freeze_modules, freeze_at in zip(args.freeze_modules, args.freeze_at):
-                    output_dir = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/seed_{seed}/"
+                    output_dir = f"runs/{args.output_dir}/{args.dataset_source}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/seed_{seed}/"
 
-                    if freeze_modules == '':
+                    if len(freeze_modules) == 0:
                         output_dir += "full_finetuning"
-
-                    if output_dir[-1] != '/':
-                        output_dir += '_'
-                    output_dir += f"{freeze_modules}-{freeze_at}" if freeze_at != '' else f"{freeze_modules}-full"
+                    output_dir += f"{freeze_modules}-{freeze_at}" if freeze_at != '0' else f"{freeze_modules}-full"
+                    if output_dir[-1] == '-':
+                        output_dir = output_dir[:-1]
 
                     config['freeze_modules'] = freeze_modules
                     config['freeze_at'] = freeze_at
