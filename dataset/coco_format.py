@@ -17,6 +17,7 @@
 """COCO"""
 import json
 import os
+from pathlib import Path
 
 import datasets
 
@@ -39,12 +40,12 @@ class COCO(datasets.GeneratorBasedBuilder):
 
         self.DEFAULT_CONFIG_NAME = name
 
+        self.features = datasets.Features(features)
+
         super().__init__()
 
         self.annotations_path = annotations_path
         self.image_path = image_path
-
-        self.features = datasets.Features(features)
 
     def _info(self):
         return datasets.DatasetInfo(
@@ -92,11 +93,11 @@ class COCO(datasets.GeneratorBasedBuilder):
             annotations = json.load(f)
 
             for image_metadata in annotations["images"]:
-                image_path = image_folders[split_key] / image_metadata["file_name"]
+                image_path = os.path.join(image_folders[split_key], image_metadata["file_name"])
 
                 record = {
                     "image_id": image_metadata["id"],
-                    "image": str(image_path.absolute()),
+                    "image": str(Path(image_path).absolute()),
                     "width": image_metadata["width"],
                     "height": image_metadata["height"],
                     "objects": [{
