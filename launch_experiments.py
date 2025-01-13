@@ -6,7 +6,7 @@ import subprocess
 def get_args_parser():
     parser = argparse.ArgumentParser('Launch experients')
 
-    parser.add_argument('--config', type=str, default="configs/models/detr_resnet_50.json")
+    parser.add_argument('--config', type=str, default="configs/models/detr_coco.json")
     parser.add_argument('--dataset_names', nargs='+', default=["detection-datasets/coco"])
     parser.add_argument('--dataset_source', default="coco")
     parser.add_argument('--seed', nargs='+', default=["1338"])
