@@ -26,6 +26,7 @@ import albumentations as A
 import numpy as np
 import torch
 from torchmetrics.detection.mean_ap import MeanAveragePrecision
+import loratorch as lora
 
 import transformers
 from transformers import (
@@ -365,6 +366,16 @@ class FewShotArguments:
         }
     )
 
+    use_lora: Optional[bool] = field(
+        default=False,
+        metadata={"help": "Whether to enable LoRA adaptation (True/False)."}
+    )
+
+    lora_rank: Optional[int] = field(
+        default=8,
+        metadata={"help": "Rank for LoRA adaptation"},
+    )
+
 
 def main():
     # See all possible arguments in src/transformers/training_args.py
@@ -547,6 +558,13 @@ def main():
         data_collator=collate_fn,
         compute_metrics=eval_compute_metrics_fn,
     )
+
+    if fs_args.use_lora:
+        for name, module in model.named_modules():
+            if isinstance(module, lora.LoRALayer):
+                print(f"✅ LoRA Applied to: {name} -> {type(module).__name__}")
+        for name, param in model.named_parameters():
+            print(f"{name}: Trainable={param.requires_grad}")
 
     # Training
     if training_args.do_train:
