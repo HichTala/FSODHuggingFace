@@ -559,13 +559,6 @@ def main():
         compute_metrics=eval_compute_metrics_fn,
     )
 
-    if fs_args.use_lora:
-        for name, module in model.named_modules():
-            if isinstance(module, lora.LoRALayer):
-                print(f"✅ LoRA Applied to: {name} -> {type(module).__name__}")
-        for name, param in model.named_parameters():
-            print(f"{name}: Trainable={param.requires_grad}")
-
     # Training
     if training_args.do_train:
         train_result = trainer.train(resume_from_checkpoint=checkpoint)
