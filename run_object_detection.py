@@ -205,26 +205,27 @@ def compute_metrics(
     # Collect predictions in the required format for metric computation,
     # model produce boxes in YOLO format, then image_processor convert them to Pascal VOC format
     for batch, target_sizes in zip(predictions, image_sizes):
-        batch_logits, batch_boxes = batch[1], batch[2]
-        output = ModelOutput(logits=torch.tensor(batch_logits), pred_boxes=torch.tensor(batch_boxes))
-        post_processed_output = image_processor.post_process_object_detection(
-            output, threshold=threshold, target_sizes=target_sizes
-        )
-        post_processed_predictions.extend(post_processed_output)
+        batch_boxes, batch_scores, batch_labels = batch[1], batch[2], batch[3]
+        for boxe, score, label in zip(batch_boxes, batch_scores, batch_labels):
+            post_processed_predictions.append({
+                "scores": torch.tensor(score),
+                "labels": torch.tensor(label),
+                "boxes": torch.tensor(boxe)
+            })
 
     # Compute metrics
-    metric = MeanAveragePrecision(box_format="xyxy", class_metrics=True)
+    metric = MeanAveragePrecision(box_format="xyxy", class_metrics=True, max_detection_thresholds=[300, 300, 300])
     metric.update(post_processed_predictions, post_processed_targets)
     metrics = metric.compute()
 
     # Replace list of per class metrics with separate metric for each class
     classes = metrics.pop("classes")
     map_per_class = metrics.pop("map_per_class")
-    mar_100_per_class = metrics.pop("mar_100_per_class")
-    for class_id, class_map, class_mar in zip(classes, map_per_class, mar_100_per_class):
+    mar_300_per_class = metrics.pop("mar_300_per_class")
+    for class_id, class_map, class_mar in zip(classes, map_per_class, mar_300_per_class):
         class_name = id2label[class_id.item()] if id2label is not None else class_id.item()
         metrics[f"map_{class_name}"] = class_map
-        metrics[f"mar_100_{class_name}"] = class_mar
+        metrics[f"mar_300_{class_name}"] = class_mar
 
     metrics = {k: round(v.item(), 4) for k, v in metrics.items()}
 
