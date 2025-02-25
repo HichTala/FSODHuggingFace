@@ -214,7 +214,7 @@ def compute_metrics(
             })
 
     # Compute metrics
-    metric = MeanAveragePrecision(box_format="xyxy", class_metrics=True, max_detection_thresholds=[300, 300, 300])
+    metric = MeanAveragePrecision(box_format="xyxy", class_metrics=True, max_detection_thresholds=[1, 100, 300])
     metric.update(post_processed_predictions, post_processed_targets)
     metrics = metric.compute()
 
