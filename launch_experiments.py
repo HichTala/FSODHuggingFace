@@ -69,9 +69,9 @@ def build_cmd(config):
 def submit_job(cmd, exec_type, **kwargs):
     if exec_type == "slurm":
         formated_script = slurm_script.format(job_name=kwargs['shot'] + 'nl' + kwargs['seed'], command=cmd)
-        with open('launchers/automatic_laucher.slurm', 'w') as f:
+        with open('launchers/automatic_launcher.slurm', 'w') as f:
             f.write(formated_script)
-        return subprocess.call(['sbatch', cmd])
+        return subprocess.call(['sbatch', 'launchers/automatic_launcher.slurm'])
     elif exec_type == "python":
         cmd = f"python run_object_detection.py{cmd}"
         return subprocess.run(cmd, shell=True)
