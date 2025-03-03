@@ -120,7 +120,7 @@ def main(args):
 
                     cmd = build_cmd(config)
                     result = submit_job(cmd, exec_type=args.exec_type, seed=seed, shot=shot)
-                    if result.returncode != 0:
+                    if result != 0:
                         print(f"Error running command: python run_object_detection.py{cmd}")
                         return
 
