@@ -6,13 +6,13 @@ import subprocess
 def get_args_parser():
     parser = argparse.ArgumentParser('Launch experients')
 
-    parser.add_argument('--config', type=str, default="configs/models/detr_coco.json")
+    parser.add_argument('--config', type=str, default="configs/models/diffusiondet_dota.json")
     parser.add_argument('--dataset_names', nargs='+', default=["detection-datasets/coco"])
-    parser.add_argument('--dataset_source', default="coco")
     parser.add_argument('--seed', nargs='+', default=["1338"])
     parser.add_argument('--shots', nargs='+', default=["10"])
-    parser.add_argument('--output_dir', type=str, default="detr-cross_domain")
+    parser.add_argument('--output_dir', type=str, default="diffusiondet")
 
+    parser.add_argument('--freeze_mode', type=bool, default=False)
     parser.add_argument('--freeze_modules', type=str)
     parser.add_argument('--freeze_at', type=str)
 
@@ -33,7 +33,11 @@ def build_cmd(config):
 def submit_job(cmd, exec_type):
     if exec_type == "python":
         cmd = f"python run_object_detection.py{cmd}"
-    return subprocess.run(cmd, shell=True)
+    # return subprocess.run(cmd, shell=True)
+    print(cmd)
+    print()
+    print()
+    return 0
 
 
 def main(args):
@@ -46,19 +50,33 @@ def main(args):
         args.freeze_at = ['', '0', 'half', '', '']
 
     for dataset_name in args.dataset_names:
-        for seed in args.seed:
-            for shot in args.shots:
-                for freeze_modules, freeze_at in zip(args.freeze_modules, args.freeze_at):
-                    output_dir = f"runs/{args.output_dir}/{args.dataset_source}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/seed_{seed}/"
+        for shot in args.shots:
+            for seed in args.seed:
+                if args.freeze_mode:
+                    for freeze_modules, freeze_at in zip(args.freeze_modules, args.freeze_at):
+                        output_dir = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/seed_{seed}/"
 
-                    if len(freeze_modules) == 0:
-                        output_dir += "full_finetuning"
-                    output_dir += f"{freeze_modules}-{freeze_at}" if freeze_at != '0' else f"{freeze_modules}-full"
-                    if output_dir[-1] == '-':
-                        output_dir = output_dir[:-1]
+                        if len(freeze_modules) == 0:
+                            output_dir += "full_finetuning"
+                        output_dir += f"{freeze_modules}-{freeze_at}" if freeze_at != '0' else f"{freeze_modules}-full"
+                        if output_dir[-1] == '-':
+                            output_dir = output_dir[:-1]
 
-                    config['freeze_modules'] = freeze_modules
-                    config['freeze_at'] = freeze_at
+                        config['freeze_modules'] = freeze_modules
+                        config['freeze_at'] = freeze_at
+
+                        config["dataset_name"] = dataset_name
+                        config["seed"] = seed
+                        config["shots"] = shot
+                        config["output_dir"] = output_dir
+
+                        cmd = build_cmd(config)
+                        result = submit_job(cmd, exec_type=args.exec_type)
+                        # if result.returncode != 0:
+                        #     print(f"Error running command: python run_object_detection.py{cmd}")
+                        #     return
+                else:
+                    output_dir = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/nolora/{seed}"
 
                     config["dataset_name"] = dataset_name
                     config["seed"] = seed
@@ -67,9 +85,9 @@ def main(args):
 
                     cmd = build_cmd(config)
                     result = submit_job(cmd, exec_type=args.exec_type)
-                    if result.returncode != 0:
-                        print(f"Error running command: python run_object_detection.py{cmd}")
-                        return
+                    # if result.returncode != 0:
+                    #     print(f"Error running command: python run_object_detection.py{cmd}")
+                    #     return
 
 
 if __name__ == "__main__":
