@@ -2,7 +2,7 @@ import argparse
 import json
 import subprocess
 
-slurm_script = """#!/bin/bash
+slurm_script = r"""#!/bin/bash
 #SBATCH --job-name={job_name}        # name of job
 #SBATCH -A mvq@v100
 # Other partitions are usable by activating/uncommenting
