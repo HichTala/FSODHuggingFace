@@ -39,6 +39,7 @@ set -x # activate echo of launched commands
 
 srun python -u run_object_detection.py{command}"""
 
+
 def get_args_parser():
     parser = argparse.ArgumentParser('Launch experients')
 
@@ -115,10 +116,14 @@ def main(args):
                 else:
                     output_dir = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/nolora/{seed}"
 
+                    logging_steps = {'50': 970, '10':100, '1':10}
+
                     config["dataset_name"] = dataset_name
                     config["seed"] = seed
                     config["shots"] = shot
                     config["output_dir"] = output_dir
+                    config["eval_steps"] = logging_steps[shot]
+                    config["save_steps"] = logging_steps[shot]
 
                     cmd = build_cmd(config)
                     result = submit_job(cmd, exec_type=args.exec_type, seed=seed, shot=shot)
