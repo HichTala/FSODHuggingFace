@@ -135,14 +135,14 @@ def main(args):
                         config["use_lora"] = True
                         for rank in args.lora_ranks:
                             config["lora_rank"] = rank
-                            config["output_dir"] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/lora/{seed}"
+                            config["output_dir"] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/lora/{seed}/{rank}"
 
                             if args.over_lora:
                                 if os.path.isfile(f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/nolora/{seed}/trainer_state.json"):
                                     with open(f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/nolora/{seed}/trainer_state.json") as f:
                                         trainer_state = json.load(f)
                                     config['model_name_or_path'] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/nolora/{seed}/{trainer_state['best_model_checkpoint']}"
-                                    config["output_dir"] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/overlora/{seed}"
+                                    config["output_dir"] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/overlora/{seed}/{rank}"
 
                             cmd = build_cmd(config)
                             result = submit_job(cmd, exec_type=args.exec_type, seed=seed, shot=shot)
