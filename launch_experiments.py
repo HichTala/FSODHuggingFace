@@ -135,7 +135,6 @@ def main(args):
                         for rank in args.lora_ranks:
                             config["lora_rank"] = rank
                             config["output_dir"] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/lora/{seed}"
-                            config["output_dir"] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/lora/{seed}"
 
                             if args.over_lora:
                                 with open("runs/trainer_state.json") as f:
