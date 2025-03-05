@@ -54,6 +54,7 @@ def get_args_parser():
     parser.add_argument('--freeze_at', type=str)
 
     parser.add_argument('--use_lora', type=bool, default=False)
+    parser.add_argument('--over_lora', type=bool, default=False)
     parser.add_argument('--lora_ranks', nargs='+', default=["8"])
 
     parser.add_argument('--exec_type', type=str, default="slurm")
@@ -118,7 +119,7 @@ def main(args):
                         #     print(f"Error running command: python run_object_detection.py{cmd}")
                         #     return
                 else:
-                    output_dir = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/lora/{seed}"
+                    output_dir = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/nolora/{seed}"
 
                     logging_steps = {'50': 970, '10':100, '1':10}
 
@@ -133,6 +134,14 @@ def main(args):
                         config["use_lora"] = True
                         for rank in args.lora_ranks:
                             config["lora_rank"] = rank
+                            config["output_dir"] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/lora/{seed}"
+                            config["output_dir"] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/lora/{seed}"
+
+                            if args.over_lora:
+                                with open("runs/trainer_state.json") as f:
+                                    trainer_state = json.load(f)
+                                config['model_name_or_path'] = trainer_state['best_model_checkpoint']
+                            config["output_dir"] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/overlora/{seed}"
 
                             cmd = build_cmd(config)
                             result = submit_job(cmd, exec_type=args.exec_type, seed=seed, shot=shot)
