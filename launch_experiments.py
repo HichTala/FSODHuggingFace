@@ -1,5 +1,6 @@
 import argparse
 import json
+import os.path
 import subprocess
 
 slurm_script = r"""#!/bin/bash
@@ -137,10 +138,11 @@ def main(args):
                             config["output_dir"] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/lora/{seed}"
 
                             if args.over_lora:
-                                with open(f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/nolora/{seed}/trainer_state.json") as f:
-                                    trainer_state = json.load(f)
-                                config['model_name_or_path'] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/nolora/{seed}/{trainer_state['best_model_checkpoint']}"
-                            config["output_dir"] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/overlora/{seed}"
+                                if os.path.isfile(f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/nolora/{seed}/trainer_state.json"):
+                                    with open(f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/nolora/{seed}/trainer_state.json") as f:
+                                        trainer_state = json.load(f)
+                                    config['model_name_or_path'] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/nolora/{seed}/{trainer_state['best_model_checkpoint']}"
+                                    config["output_dir"] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/overlora/{seed}"
 
                             cmd = build_cmd(config)
                             result = submit_job(cmd, exec_type=args.exec_type, seed=seed, shot=shot)
