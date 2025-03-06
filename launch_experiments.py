@@ -142,7 +142,6 @@ def main(args):
                                     with open(f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/nolora/{seed}/trainer_state.json") as f:
                                         trainer_state = json.load(f)
                                     config['model_name_or_path'] = trainer_state['best_model_checkpoint']
-                                    breakpoint()
                                     config["output_dir"] = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/overlora/{seed}/{rank}"
 
                             cmd = build_cmd(config)
