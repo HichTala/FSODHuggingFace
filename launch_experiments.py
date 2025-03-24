@@ -64,10 +64,10 @@ def build_cmd(config):
 
 def submit_job(cmd, exec_type, **kwargs):
     if exec_type == "slurm":
-        formated_script = slurm_script.format(job_name=kwargs['dataset_name'], command=cmd)
+        formated_script = slurm_script.format(job_name=kwargs['dataset'], command=cmd)
         with open('launchers/automatic_launcher.slurm', 'w') as f:
             f.write(formated_script)
-        print('job_name', kwargs['dataset_name'])
+        print('job_name', kwargs['dataset'])
         return subprocess.call(['sbatch', 'launchers/automatic_launcher.slurm'])
     elif exec_type == "python":
         cmd = f"python run_object_detection.py{cmd}"
