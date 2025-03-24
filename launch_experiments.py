@@ -26,10 +26,10 @@ slurm_script = r"""#!/bin/bash
 ##SBATCH --cpus-per-task=8           # number of cores per task for gpu_p5 (1/8 of 8-GPUs node)
 # /!\ Caution, "multithread" in Slurm vocabulary refers to hyperthreading.
 #SBATCH --hint=nomultithread         # hyperthreading is deactivated
-#SBATCH --time=100:00:00              # maximum execution time requested (HH:MM:SS)
+#SBATCH --time=20:00:00              # maximum execution time requested (HH:MM:SS)
 #SBATCH --output=logs/gpu_single%j.out    # name of output file
 #SBATCH --error=logs/gpu_single%j.out     # name of error file (here, in common with the output file)
-#SBATCH --qos=qos_gpu-t4
+#SBATCH --qos=qos_gpu-t3
 
 module purge # purge modules inherited by default
 module load pytorch-gpu/py3/2.5.0 # load modules
@@ -122,7 +122,7 @@ def main(args):
                 else:
                     output_dir = f"runs/{args.output_dir}/{dataset_name.rstrip('/').split('/')[-1]}/{shot}/nolora/{seed}"
 
-                    logging_steps = {'50': 970, '10':100, '1':10}
+                    logging_steps = {'50': 970, '10':100, '5': 50, '1':10}
 
                     config["dataset_name"] = dataset_name
                     config["seed"] = seed
