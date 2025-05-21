@@ -82,6 +82,7 @@ def submit_job(cmd, exec_type, **kwargs):
     elif exec_type == "python":
         cmd = f"python run_object_detection.py{cmd}"
         return subprocess.run(cmd, shell=True)
+    return None
 
 
 def main(args):
